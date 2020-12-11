@@ -1,0 +1,48 @@
+<div class="col-lg-3 order-2 order-lg-1">
+    <h5 class="text-uppercase mb-4">Filter Products</h5>
+    <div class="py-2 px-4 bg-dark text-white mb-3"><strong
+            class="small text-uppercase font-weight-bold">Category</strong></div>
+    <ul class="list-unstyled small text-muted pl-lg-4 font-weight-normal">
+        {% for category in view.get_category %}
+        <li name="category" class="mb-2"><a class="reset-anchor"
+                href="/filtering/category/{{ category.name }}">{{ category.name }}</a></li>
+        {% endfor %}
+    </ul>
+    <div class="py-2 px-4 bg-light mb-3">
+        <strong class="small text-uppercase font-weight-bold">
+            Brand
+        </strong>
+    </div>
+    <ul class="list-unstyled small text-muted pl-lg-4 font-weight-normal">
+        {% for brand in view.get_brand %}
+        <li class="mb-2"><a class="reset-anchor" href="/filtering/brand/{{ brand.name }}">{{ brand.name }}</a></li>
+        {% endfor %}
+    </ul>
+    <div class="py-2 px-4 bg-light mb-3">
+        <strong class="small text-uppercase font-weight-bold">
+            Types
+        </strong>
+    </div>
+    <ul class="list-unstyled small text-muted pl-lg-4 font-weight-normal mb-5">
+        <form action="" method="get">
+            {% for type in view.get_types %}
+            <div class="custom-control custom-checkbox mb-1">
+                <input class="custom-control-input" id="customCheck{{ type.id }}" type="checkbox" value="{{ type.id }}"
+                    name="type">
+                <label class="custom-control-label text-small" for="customCheck{{ type.id }}">{{ type.name }}</label>
+            </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-dark mt-3">Submit</button>
+        </form>
+    </ul>
+    <h6 class="text-uppercase mb-4">Price range</h6>
+    <div class="price-range pt-4 mb-5">
+        <div id="range"></div>
+        <div class="row pt-2">
+            <div class="col-6"><strong class="small font-weight-bold text-uppercase">From</strong>
+            </div>
+            <div class="col-6 text-right"><strong class="small font-weight-bold text-uppercase">To</strong></div>
+        </div>
+    </div>
+</div>
+
