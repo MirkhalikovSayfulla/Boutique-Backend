@@ -67,29 +67,43 @@
             behaviour: 'tap-drag',
             tooltips: true,
             format: {
-                to: function (value){
-                return '$' + value;
-            },
-            from: function (value) {
-                return value.replace('', '');
+                to: function (value) {
+                    return '$' + value;
+                },
+                from: function (value) {
+                    return value.replace('', '');
+                }
+            }
+
+        });
+
+        range.noUiSlider.on('change', function (values) {
+            return location.href = `{{request.path}}?minprice=${values[0]}&maxprice=${values[1]}`
+        });
+
+        const params = new URLSearchParams(window.location.search);
+        const minprice = params.get("minprice").replace('$', '');
+        const maxprice = params.get("maxprice").replace('$', '');
+
+
+        if (minprice && maxprice) {
+            range.noUiSlider.set([minprice, maxprice]);
+        }
+
+
+        function createCard2() {
+            let el = document.querySelectorAll('#product');
+            for (let i = 0; i < el.length; i++) {
+                el[i].classList = "col-md-6 col-sm-6";
             }
         }
 
-    });
-
-    range.noUiSlider.on('change', function (values) {
-            return location.href = `{{request.path}}?minprice=${values[0]}&maxprice=${values[1]}`
-    });
-
-    const params = new URLSearchParams(window.location.search);
-    const minprice = params.get("minprice").replace('$', '');
-    const maxprice = params.get("maxprice").replace('$', '');
-
-    
-    if (minprice && maxprice) {
-        range.noUiSlider.set([minprice, maxprice]);
-    }
-
+        function createCard3() {
+            let el = document.querySelectorAll('#product');
+            for (let i = 0; i < el.length; i++) {
+                el[i].classList = "col-md-4 col-sm-6";
+            }
+        }
     </script>
     <script>
         // ------------------------------------------------------- //
