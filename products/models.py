@@ -26,7 +26,7 @@ post_save.connect(create_customer, sender=User)
 
 
 class Subscribe(models.Model):
-    name = models.CharField(max_length=299)
+    name = models.CharField(max_length=299, unique=True)
 
     def __str__(self):
         return self.name

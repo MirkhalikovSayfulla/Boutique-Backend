@@ -72,6 +72,12 @@ class Filter(ListView, GetFilterProducts):
     model = Product
     paginate_by = 12
 
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(Filter, self).get_context_data()
+        context['active'] = 'shop'
+        return context
+
     def get_queryset(self):
         if self.kwargs.get('t') == 'brand':
             queryset = Product.objects.filter(
@@ -98,7 +104,11 @@ def checkout(request):
 
 
 def add_subscribe(request):
-    Subscribe.objects.create(
-        name=request.POST.get('email')
-    )
+    try:
+        Subscribe.objects.create(
+            name=request.POST.get('email')
+        )
+    except Exception as err:
+        print(err)
+        return redirect('products:home')
     return redirect("products:home")
