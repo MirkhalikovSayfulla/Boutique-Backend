@@ -104,6 +104,14 @@
                 el[i].classList = "col-md-4 col-sm-6";
             }
         }
+
+
+        function sorting() {
+            var selectBox = document.getElementById("selectBox");
+            var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+            location.href = `?sorting=${selectedValue}`
+        }
+
     </script>
     <script>
         // ------------------------------------------------------- //

@@ -28,7 +28,7 @@ class Home(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(Home, self).get_context_data()
         context['products'] = Product.objects.filter(
-            completed=False).order_by('-id')
+            completed=False).order_by('-id')[:12]
         context['active'] = 'home'
         return context
 
@@ -59,11 +59,18 @@ class Shop(ListView, GetFilterProducts):
                 Q(type__in=self.request.GET.getlist('type'))
             )
 
-        minprice = self.request.GET.get('minprice', 0)
-        maxprice = self.request.GET.get('maxprice', 0)
+        minprice = self.request.GET.get('minprice', False)
+        maxprice = self.request.GET.get('maxprice', False)
+        sorting = self.request.GET.get('sorting', False)
+        
+        queryset = queryset.filter(completed=False)
+
         if minprice and maxprice:
             queryset = queryset.filter(price__range=(minprice[1:], maxprice[1:]))
-        return queryset.filter(completed=False).order_by('-id')
+        
+        if sorting:
+            queryset = queryset.order_by(str(sorting))
+        return queryset.distinct()
 
 
 class Filter(ListView, GetFilterProducts):
@@ -92,11 +99,18 @@ class Filter(ListView, GetFilterProducts):
         else:
             return redirect('products:home')
 
-        minprice = self.request.GET.get('minprice', 0)
-        maxprice = self.request.GET.get('maxprice', 0)
+        minprice = self.request.GET.get('minprice', False)
+        maxprice = self.request.GET.get('maxprice', False)
+        sorting = self.request.GET.get('sorting', False)
+        
+        queryset = queryset.filter(completed=False)
+
         if minprice and maxprice:
             queryset = queryset.filter(price__range=(minprice[1:], maxprice[1:]))
-        return queryset.filter(completed=False).distinct()
+        
+        if sorting:
+            queryset = queryset.order_by(str(sorting))
+        return queryset.distinct()
 
 
 def checkout(request):
