@@ -1,5 +1,8 @@
 from django.shortcuts import render, redirect
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+
 from django.views.generic import TemplateView, ListView
 from .models import (
     Subscribe,
@@ -11,7 +14,6 @@ from .models import (
 
 
 class GetFilterProducts:
-
     def get_brand(self):
         return Brand.objects.order_by('-id')
 
@@ -30,15 +32,6 @@ class Home(TemplateView):
         context['products'] = Product.objects.filter(
             completed=False).order_by('-id')[:12]
         context['active'] = 'home'
-        return context
-
-
-class Cart(TemplateView):
-    template_name = 'products/cart.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(Cart, self).get_context_data()
-        context['active'] = 'cart'
         return context
 
 
@@ -62,12 +55,13 @@ class Shop(ListView, GetFilterProducts):
         minprice = self.request.GET.get('minprice', False)
         maxprice = self.request.GET.get('maxprice', False)
         sorting = self.request.GET.get('sorting', False)
-        
+
         queryset = queryset.filter(completed=False)
 
         if minprice and maxprice:
-            queryset = queryset.filter(price__range=(minprice[1:], maxprice[1:]))
-        
+            queryset = queryset.filter(
+                price__range=(minprice[1:], maxprice[1:]))
+
         if sorting:
             queryset = queryset.order_by(str(sorting))
         return queryset.distinct()
@@ -78,7 +72,6 @@ class Filter(ListView, GetFilterProducts):
     context_object_name = 'products'
     model = Product
     paginate_by = 12
-
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(Filter, self).get_context_data()
@@ -102,15 +95,29 @@ class Filter(ListView, GetFilterProducts):
         minprice = self.request.GET.get('minprice', False)
         maxprice = self.request.GET.get('maxprice', False)
         sorting = self.request.GET.get('sorting', False)
-        
+
         queryset = queryset.filter(completed=False)
 
         if minprice and maxprice:
-            queryset = queryset.filter(price__range=(minprice[1:], maxprice[1:]))
-        
+            queryset = queryset.filter(
+                price__range=(minprice[1:], maxprice[1:]))
+
         if sorting:
             queryset = queryset.order_by(str(sorting))
         return queryset.distinct()
+
+
+class Cart(TemplateView, ):
+    template_name = 'products/cart.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(Cart, self).get_context_data()
+        context['active'] = 'cart'
+        return context
+
+    @method_decorator(login_required(login_url='/users/login'))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 
 def checkout(request):
