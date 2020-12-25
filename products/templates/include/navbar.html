@@ -22,7 +22,7 @@
                             <a class="nav-link {% if active == 'cart' %}active{% endif %}"
                                href="{% url 'products:cart' %}">
                                 <i class="fas fa-dolly-flatbed mr-1 text-gray"></i>
-                                Cart<small class="text-gray">(2)</small>
+                                Cart<small class="text-gray">({{ view.get_cart_item }})</small>
                             </a>
                         </li>
                         <li class="nav-item">

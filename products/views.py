@@ -27,8 +27,14 @@ class GetOrder:
     def get_cart_item(self):
         return self.get_order().get_cart_items
 
+    def get_coupon(self):
+        if self.get_order().get_coupon:
+            return self.get_order().get_cart_total - 10
+        else:
+            return self.get_order().get_cart_total
 
-class GetFilterProducts:
+
+class GetFiltering:
     def get_brand(self):
         return Brand.objects.order_by('-id')
 
@@ -39,7 +45,7 @@ class GetFilterProducts:
         return Category.objects.order_by('-id')
 
 
-class Home(TemplateView):
+class Home(TemplateView, GetOrder):
     template_name = 'products/index.html'
 
     def get_context_data(self, **kwargs):
@@ -50,7 +56,7 @@ class Home(TemplateView):
         return context
 
 
-class Shop(ListView, GetFilterProducts):
+class Shop(ListView, GetFiltering, GetOrder):
     template_name = 'products/shop.html'
     context_object_name = 'products'
     paginate_by = 12
@@ -84,7 +90,7 @@ class Shop(ListView, GetFilterProducts):
         return queryset.distinct()
 
 
-class Filter(ListView, GetFilterProducts):
+class Filter(ListView, GetFiltering, GetOrder):
     template_name = 'products/shop.html'
     context_object_name = 'products'
     model = Product
@@ -153,3 +159,16 @@ def add_subscribe(request):
         print(err)
         return redirect('products:home')
     return redirect("products:home")
+
+
+def add_coupon(request):
+    order = Order.objects.get(
+        customer=request.user.customer,
+        complete=False,
+    )
+
+    if not order.coupon:
+        order.coupon = request.POST.get('coupon')
+        order.save()
+
+    return redirect('products:cart')

@@ -39,7 +39,6 @@ class Category(models.Model):
         return self.name
 
 
-
 class Type(models.Model):
     name = models.CharField(max_length=299)
 
@@ -75,7 +74,6 @@ class Product(models.Model):
         null=True, blank=True
     )
     completed = models.BooleanField(default=False)
-
 
     def __str__(self):
         return self.name
@@ -118,6 +116,7 @@ class ProductView(models.Model):
 class Order(models.Model):
     customer = models.ForeignKey(
         Customer, on_delete=models.CASCADE)
+    coupon = models.IntegerField(null=True, blank=True, default=None)
     complete = models.BooleanField(default=False)
 
     def __str__(self):
@@ -136,6 +135,14 @@ class Order(models.Model):
         return total
 
 
+    @property
+    def get_coupon(self):
+        if self.coupon:
+            return True
+        return False
+
+
+
 class OrderItem(models.Model):
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE)
@@ -149,5 +156,5 @@ class OrderItem(models.Model):
         total = self.product.price * self.quantity
         return total
 
-    def __str__(self):
-        return "{} {}".format(self.product.name, self.order.customer)
+    # def __str__(self):
+    #     return "{} {}".format(self.product.name, self.order.customer)
