@@ -9,8 +9,23 @@ from .models import (
     Product,
     Category,
     Type,
-    Brand
+    Brand,
+    Order
 )
+
+
+class GetOrder:
+    def get_order(self):
+        customer = self.request.user.customer
+        order, created = Order.objects.get_or_create(
+            customer=customer, complete=False)
+        return order
+
+    def get_item(self):
+        return self.get_order().orderitem_set.all()
+
+    def get_cart_item(self):
+        return self.get_order().get_cart_items
 
 
 class GetFilterProducts:
@@ -64,6 +79,8 @@ class Shop(ListView, GetFilterProducts):
 
         if sorting:
             queryset = queryset.order_by(str(sorting))
+        else:
+            queryset = queryset.order_by('-id')
         return queryset.distinct()
 
 
@@ -104,10 +121,13 @@ class Filter(ListView, GetFilterProducts):
 
         if sorting:
             queryset = queryset.order_by(str(sorting))
+        else:
+            queryset = queryset.order_by('-id')
+
         return queryset.distinct()
 
 
-class Cart(TemplateView, ):
+class Cart(TemplateView, GetOrder):
     template_name = 'products/cart.html'
 
     def get_context_data(self, **kwargs):
