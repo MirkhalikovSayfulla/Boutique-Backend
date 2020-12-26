@@ -12,6 +12,7 @@ from .models import (
     Brand,
     Order
 )
+from products.models import Coupon
 
 
 class GetOrder:
@@ -29,7 +30,7 @@ class GetOrder:
 
     def get_coupon(self):
         if self.get_order().get_coupon:
-            return self.get_order().get_cart_total - 10
+            return self.get_order().get_cart_total - self.get_order().coupon.amount
         else:
             return self.get_order().get_cart_total
 
@@ -162,13 +163,14 @@ def add_subscribe(request):
 
 
 def add_coupon(request):
-    order = Order.objects.get(
-        customer=request.user.customer,
-        complete=False,
-    )
-
-    if not order.coupon:
-        order.coupon = request.POST.get('coupon')
+    new_coupon_code = request.POST.get('coupon')
+    order = Order.objects.get(customer=request.user.customer)
+    try:
+        coupon = Coupon.objects.get(code=new_coupon_code)
+    except Exception as err:
+        coupon = False
+        print(err)
+    if order.coupon is None and coupon:
+        order.coupon = coupon
         order.save()
-
     return redirect('products:cart')

@@ -113,10 +113,21 @@ class ProductView(models.Model):
         return url
 
 
+
+
+class Coupon(models.Model):
+    code = models.CharField(max_length=20)
+    amount = models.IntegerField()
+
+    def __str__(self):
+        return self.code
+
+
 class Order(models.Model):
     customer = models.ForeignKey(
         Customer, on_delete=models.CASCADE)
-    coupon = models.IntegerField(null=True, blank=True, default=None)
+    coupon = models.ForeignKey(
+        Coupon, on_delete=models.SET_NULL, blank=True, null=True)
     complete = models.BooleanField(default=False)
 
     def __str__(self):
@@ -134,13 +145,11 @@ class Order(models.Model):
         total = sum([item.quantity for item in order_items])
         return total
 
-
     @property
     def get_coupon(self):
         if self.coupon:
             return True
         return False
-
 
 
 class OrderItem(models.Model):
@@ -158,3 +167,4 @@ class OrderItem(models.Model):
 
     # def __str__(self):
     #     return "{} {}".format(self.product.name, self.order.customer)
+

@@ -8,7 +8,8 @@ from .models import (
     Order,
     OrderItem,
     Brand,
-    Type
+    Type,
+    Coupon
 )
 
 
@@ -19,6 +20,8 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ['name']
 
 
+admin.site.register(Category)
+admin.site.register(Coupon)
 admin.site.register(Subscribe)
 admin.site.register(Customer)
 admin.site.register(ProductView)
