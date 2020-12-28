@@ -3,16 +3,16 @@ from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
-from django.views.generic import TemplateView, ListView
-from .models import (
+from django.views.generic import TemplateView, ListView, DetailView
+from products.models import (
     Subscribe,
     Product,
     Category,
     Type,
     Brand,
-    Order
+    Order,
+    Coupon
 )
-from products.models import Coupon
 
 
 class GetOrder:
@@ -30,7 +30,7 @@ class GetOrder:
 
     def get_coupon(self):
         if self.get_order().get_coupon:
-            return self.get_order().get_cart_total - self.get_order().coupon.amount
+            return self.get_order().get_cart_total - self.get_order().coupon.discount
         else:
             return self.get_order().get_cart_total
 
@@ -55,6 +55,11 @@ class Home(TemplateView, GetOrder):
             completed=False).order_by('-id')[:12]
         context['active'] = 'home'
         return context
+
+
+class ProductDetailView(DetailView, GetOrder):
+    model = Product
+    template_name = 'products/detail.html'
 
 
 class Shop(ListView, GetFiltering, GetOrder):

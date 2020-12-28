@@ -113,11 +113,9 @@ class ProductView(models.Model):
         return url
 
 
-
-
 class Coupon(models.Model):
     code = models.CharField(max_length=20)
-    amount = models.IntegerField()
+    discount = models.IntegerField()
 
     def __str__(self):
         return self.code
@@ -129,6 +127,7 @@ class Order(models.Model):
     coupon = models.ForeignKey(
         Coupon, on_delete=models.SET_NULL, blank=True, null=True)
     complete = models.BooleanField(default=False)
+
 
     def __str__(self):
         return str(self.id)
@@ -167,4 +166,3 @@ class OrderItem(models.Model):
 
     # def __str__(self):
     #     return "{} {}".format(self.product.name, self.order.customer)
-
