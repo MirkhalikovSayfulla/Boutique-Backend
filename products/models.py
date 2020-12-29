@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
+from ckeditor.fields import RichTextField
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class Customer(models.Model):
@@ -68,10 +70,16 @@ class Product(models.Model):
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     type = models.ManyToManyField(Type)
+    description = RichTextField()
     status = models.CharField(
         choices=PRODUCT_STATUS,
         default=None, max_length=10,
         null=True, blank=True
+    )
+    stars = models.IntegerField(
+        validators=[
+            MinValueValidator(0),
+            MaxValueValidator(5)]
     )
     completed = models.BooleanField(default=False)
 
@@ -87,6 +95,14 @@ class Product(models.Model):
             print(err)
 
         return url
+
+    @property
+    def get_stars(self):
+        stars = [True for i in range(self.stars)]
+        for j in range(5-len(stars)):
+            stars.append(False)
+        print(stars)
+        return stars
 
 
 class ProductView(models.Model):
