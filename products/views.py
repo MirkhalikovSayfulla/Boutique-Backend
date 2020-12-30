@@ -57,15 +57,16 @@ class Home(TemplateView, GetOrder):
         return context
 
 
-class ProductDetailView(DetailView, GetOrder):
-    model = Product
+class ProductDetailView(TemplateView, GetOrder):
     template_name = 'products/detail.html'
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         product = Product.objects.get(id=self.kwargs.get('pk'))
-        print(product.category)
+        context['product'] = product
+        context['related'] = Product.objects.filter(completed=False, category=product.category)[:4]
         return context
+
 
 class Shop(ListView, GetFiltering, GetOrder):
     template_name = 'products/shop.html'

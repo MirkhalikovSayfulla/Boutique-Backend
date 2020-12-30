@@ -13,7 +13,7 @@
                     <div class="col-lg-6">
                         <p class="text-muted small text-uppercase mb-2">New Inspiration 2020</p>
                         <h1 class="h2 text-uppercase mb-3">20% off on new season</h1><a class="btn btn-dark"
-                            href="shop.html">Browse
+                            href="{% url 'products:shop' %}">Browse
                             collections</a>
                     </div>
                 </div>
@@ -56,7 +56,7 @@
                                 {{ product.get_status_display }}
                             </div>
                             {% endif %}
-                            <a class="d-block" href=""><img class="img-fluid w-100" src="{{ product.image_url }}"
+                            <a class="d-block" href="{% url 'products:detail' product.id %}"><img class="img-fluid w-100" src="{{ product.image_url }}"
                                     alt="..."></a>
                             <div class="product-overlay">
                                 <ul class="mb-0 list-inline">
