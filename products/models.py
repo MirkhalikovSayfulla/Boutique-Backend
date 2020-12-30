@@ -98,10 +98,12 @@ class Product(models.Model):
 
     @property
     def get_stars(self):
-        stars = [True for i in range(self.stars)]
-        for j in range(5-len(stars)):
-            stars.append(False)
-        print(stars)
+        stars = []
+        for i in range(5):
+            if i < self.stars:
+                stars.append(True)
+            else:
+                stars.append(False)
         return stars
 
 
@@ -143,7 +145,6 @@ class Order(models.Model):
     coupon = models.ForeignKey(
         Coupon, on_delete=models.SET_NULL, blank=True, null=True)
     complete = models.BooleanField(default=False)
-
 
     def __str__(self):
         return str(self.id)

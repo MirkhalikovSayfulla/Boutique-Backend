@@ -50,11 +50,11 @@
                                     <tr>
                                         <th class="pl-0 border-0" scope="row">
                                             <div class="media align-items-center"><a
-                                                    class="reset-anchor d-block animsition-link" href="detail.html"><img
+                                                    class="reset-anchor d-block animsition-link" href="{% url 'products:detail' item.product.id %}"><img
                                                     src="{{ item.product.image_url }}" alt="..." width="70"/></a>
                                                 <div class="media-body ml-3"><strong class="h6"><a
                                                         class="reset-anchor animsition-link"
-                                                        href="detail.html">{{ item.product.name }}</a></strong></div>
+                                                        href="{% url 'products:detail' item.product.id %}">{{ item.product.name }}</a></strong></div>
                                             </div>
                                         </th>
                                         <td class="align-middle border-0">

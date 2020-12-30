@@ -60,7 +60,12 @@ class Home(TemplateView, GetOrder):
 class ProductDetailView(DetailView, GetOrder):
     model = Product
     template_name = 'products/detail.html'
-
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        product = Product.objects.get(id=self.kwargs.get('pk'))
+        print(product.category)
+        return context
 
 class Shop(ListView, GetFiltering, GetOrder):
     template_name = 'products/shop.html'
