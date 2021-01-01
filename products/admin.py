@@ -9,7 +9,8 @@ from products.models import (
     OrderItem,
     Brand,
     Type,
-    Coupon
+    Coupon,
+    Wishlist
 )
 from django.utils.safestring import mark_safe
 
@@ -78,3 +79,8 @@ class OrderAdmin(admin.ModelAdmin):
 @admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
     list_display = ['product', 'order', 'quantity', 'date_added']
+
+
+@admin.register(Wishlist)
+class WishlistAdmin(admin.ModelAdmin):
+    list_display = ['product', 'order']

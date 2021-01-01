@@ -26,9 +26,9 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href=""> 
+                        <a class="nav-link {% if active == 'wishlist' %}active{% endif %}" href="{% url 'products:wishlist' %}"> 
                             <i class="far fa-heart mr-1"></i>
-                            <small class="text-gray">(0)</small>
+                            <small class="text-gray">({{ view.get_wishlist.count }})</small>
                         </a>
                     </li>
                     <li class="nav-item">

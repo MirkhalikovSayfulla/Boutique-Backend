@@ -15,7 +15,7 @@ from products.models import (
 )
 
 
-class GetOrder:
+class GetItemsProduct:
     def get_order(self):
         customer = self.request.user.customer
         order, created = Order.objects.get_or_create(
@@ -34,6 +34,10 @@ class GetOrder:
         else:
             return self.get_order().get_cart_total
 
+    def get_wishlist(self):
+        return self.get_order().wishlist_set.all()
+
+
 
 class GetFiltering:
     def get_brand(self):
@@ -46,7 +50,7 @@ class GetFiltering:
         return Category.objects.order_by('-id')
 
 
-class Home(TemplateView, GetOrder):
+class Home(TemplateView, GetItemsProduct):
     template_name = 'products/index.html'
 
     def get_context_data(self, **kwargs):
@@ -57,7 +61,7 @@ class Home(TemplateView, GetOrder):
         return context
 
 
-class ProductDetailView(TemplateView, GetOrder):
+class ProductDetailView(TemplateView, GetItemsProduct):
     template_name = 'products/detail.html'
 
     def get_context_data(self, **kwargs):
@@ -68,7 +72,7 @@ class ProductDetailView(TemplateView, GetOrder):
         return context
 
 
-class Shop(ListView, GetFiltering, GetOrder):
+class Shop(ListView, GetFiltering, GetItemsProduct):
     template_name = 'products/shop.html'
     context_object_name = 'products'
     paginate_by = 12
@@ -102,7 +106,7 @@ class Shop(ListView, GetFiltering, GetOrder):
         return queryset.distinct()
 
 
-class Filter(ListView, GetFiltering, GetOrder):
+class Filter(ListView, GetFiltering, GetItemsProduct):
     template_name = 'products/shop.html'
     context_object_name = 'products'
     model = Product
@@ -145,12 +149,25 @@ class Filter(ListView, GetFiltering, GetOrder):
         return queryset.distinct()
 
 
-class Cart(TemplateView, GetOrder):
+class Cart(TemplateView, GetItemsProduct):
     template_name = 'products/cart.html'
 
     def get_context_data(self, **kwargs):
         context = super(Cart, self).get_context_data()
         context['active'] = 'cart'
+        return context
+
+    @method_decorator(login_required(login_url='/users/login'))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+
+class Wishlist(TemplateView, GetItemsProduct):
+    template_name = 'products/wishlist.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(Wishlist, self).get_context_data()
+        context['active'] = 'wishlist'
         return context
 
     @method_decorator(login_required(login_url='/users/login'))

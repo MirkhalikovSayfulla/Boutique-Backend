@@ -183,3 +183,10 @@ class OrderItem(models.Model):
 
     # def __str__(self):
     #     return "{} {}".format(self.product.name, self.order.customer)
+
+
+class Wishlist(models.Model):
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE)
+    order = models.ForeignKey(
+        Order, on_delete=models.SET_NULL, blank=True, null=True)
