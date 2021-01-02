@@ -38,7 +38,6 @@ class GetItemsProduct:
         return self.get_order().wishlist_set.all()
 
 
-
 class GetFiltering:
     def get_brand(self):
         return Brand.objects.order_by('-id')
@@ -68,7 +67,8 @@ class ProductDetailView(TemplateView, GetItemsProduct):
         context = super().get_context_data(**kwargs)
         product = Product.objects.get(id=self.kwargs.get('pk'))
         context['product'] = product
-        context['related'] = Product.objects.filter(completed=False, category=product.category)[:4]
+        context['related'] = Product.objects.filter(
+            completed=False, category=product.category)[:4]
         return context
 
 
@@ -175,8 +175,8 @@ class Wishlist(TemplateView, GetItemsProduct):
         return super().dispatch(*args, **kwargs)
 
 
-def checkout(request):
-    return render(request, 'products/checkout.html')
+class Checkout(TemplateView, GetItemsProduct):
+    template_name = 'products/checkout.html'
 
 
 def add_subscribe(request):
