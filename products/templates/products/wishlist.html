@@ -44,16 +44,17 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                {% if view.get_wishlist %}
                                 {% for item in view.get_wishlist %}
                                 <tr>
                                     <th class="pl-0 border-0" scope="row">
                                         <div class="media align-items-center"><a
-                                                class="reset-anchor d-block animsition-link" href=""><img
+                                                class="reset-anchor d-block animsition-link" href="{% url 'products:detail' item.product.id %}"><img
                                                     src="{{ item.product.image_url }}" alt="..." width="70" /></a>
                                             <div class="media-body ml-3">
                                                 <strong class="h6">
-                                                    <a class="reset-anchor animsition-link" href="">
-                                                         {{ item.product.name }}
+                                                    <a class="reset-anchor animsition-link" href="{% url 'products:detail' item.product.id %}">
+                                                        {{ item.product.name }}
                                                     </a>
                                                 </strong>
                                             </div>
@@ -62,11 +63,22 @@
                                     <td class="align-middle border-0">
                                         <p class="mb-0 small">${{ item.product.price }}</p>
                                     </td>
-                                    <td class="align-middle border-0"><a class="reset-anchor" href="#"><i
+                                    <td class="align-middle border-0"><a class="reset-anchor"
+                                            href="{% url 'products:deleteitem' 'wishlist' item.id %}"><i
                                                 class="fas fa-trash-alt small text-muted"></i></a></td>
                                 </tr>
                                 {% endfor %}
-
+                                {% else %}
+                                <tr>
+                                    <td class="align-middle border-0">
+                                        <div class="media-body ml-3">
+                                            <strong class="h6">
+                                                No Products
+                                            </strong>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endif %}
                             </tbody>
                         </table>
                     </div>

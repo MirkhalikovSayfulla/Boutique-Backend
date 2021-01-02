@@ -76,7 +76,7 @@
                                         <td class="align-middle border-0">
                                             <p class="mb-0 small">${{ item.get_total|floatformat:2 }}</p>
                                         </td>
-                                        <td class="align-middle border-0"><a class="reset-anchor" href="#"><i
+                                        <td class="align-middle border-0"><a class="reset-anchor" href="{% url 'products:deleteitem' 'cart' item.id %}"><i
                                                 class="fas fa-trash-alt small text-muted"></i></a></td>
                                     </tr>
                                 {% endfor %}

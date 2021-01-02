@@ -11,7 +11,9 @@ from products.models import (
     Type,
     Brand,
     Order,
-    Coupon
+    Coupon,
+    Wishlist,
+    OrderItem
 )
 
 
@@ -49,11 +51,11 @@ class GetFiltering:
         return Category.objects.order_by('-id')
 
 
-class Home(TemplateView, GetItemsProduct):
+class HomeView(TemplateView, GetItemsProduct):
     template_name = 'products/index.html'
 
     def get_context_data(self, **kwargs):
-        context = super(Home, self).get_context_data()
+        context = super(HomeView, self).get_context_data()
         context['products'] = Product.objects.filter(
             completed=False).order_by('-id')[:12]
         context['active'] = 'home'
@@ -72,13 +74,13 @@ class ProductDetailView(TemplateView, GetItemsProduct):
         return context
 
 
-class Shop(ListView, GetFiltering, GetItemsProduct):
+class ShopView(ListView, GetFiltering, GetItemsProduct):
     template_name = 'products/shop.html'
     context_object_name = 'products'
     paginate_by = 12
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(Shop, self).get_context_data()
+        context = super(ShopView, self).get_context_data()
         context['active'] = 'shop'
         return context
 
@@ -149,11 +151,11 @@ class Filter(ListView, GetFiltering, GetItemsProduct):
         return queryset.distinct()
 
 
-class Cart(TemplateView, GetItemsProduct):
+class CartView(TemplateView, GetItemsProduct):
     template_name = 'products/cart.html'
 
     def get_context_data(self, **kwargs):
-        context = super(Cart, self).get_context_data()
+        context = super(CartView, self).get_context_data()
         context['active'] = 'cart'
         return context
 
@@ -162,11 +164,11 @@ class Cart(TemplateView, GetItemsProduct):
         return super().dispatch(*args, **kwargs)
 
 
-class Wishlist(TemplateView, GetItemsProduct):
+class WishlistView(TemplateView, GetItemsProduct):
     template_name = 'products/wishlist.html'
 
     def get_context_data(self, **kwargs):
-        context = super(Wishlist, self).get_context_data()
+        context = super(WishlistView, self).get_context_data()
         context['active'] = 'wishlist'
         return context
 
@@ -175,8 +177,12 @@ class Wishlist(TemplateView, GetItemsProduct):
         return super().dispatch(*args, **kwargs)
 
 
-class Checkout(TemplateView, GetItemsProduct):
+class CheckoutView(TemplateView, GetItemsProduct):
     template_name = 'products/checkout.html'
+
+    @method_decorator(login_required(login_url='/users/login'))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 
 def add_subscribe(request):
@@ -202,3 +208,27 @@ def add_coupon(request):
         order.coupon = coupon
         order.save()
     return redirect('products:cart')
+
+
+def add_wishlist(request, productid):
+    customer = request.user.customer
+    order, created = Order.objects.get_or_create(
+        customer=customer, complete=False
+    )
+    product = Product.objects.get(id=productid)
+    try:
+        Wishlist.objects.get(product=product, order=order)
+    except:
+        Wishlist.objects.create(product=product, order=order)
+    return redirect('products:wishlist')
+
+
+def delete_item(request, action, pk):
+    if action == 'wishlist':
+        Wishlist.objects.get(id=pk).delete()
+        return redirect('products:wishlist')
+    elif action == 'cart':
+        OrderItem.objects.get(id=pk).delete()
+        return redirect('products:cart')
+    return redirect('products:home')
+    
