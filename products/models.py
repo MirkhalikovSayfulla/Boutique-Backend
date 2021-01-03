@@ -1,6 +1,5 @@
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models.signals import post_save
 from ckeditor.fields import RichTextField
 from django.core.validators import MinValueValidator, MaxValueValidator
 
@@ -13,18 +12,6 @@ class Customer(models.Model):
 
     def __str__(self):
         return self.full_name
-
-
-def create_customer(sender, instance, created, **kwargs):
-    if created:
-        Customer.objects.create(
-            user=instance,
-            full_name=instance.first_name + '  ' + instance.last_name,
-            email=instance.email
-        )
-
-
-post_save.connect(create_customer, sender=User)
 
 
 class Subscribe(models.Model):
@@ -181,8 +168,12 @@ class OrderItem(models.Model):
         total = self.product.price * self.quantity
         return total
 
-    # def __str__(self):
-    #     return "{} {}".format(self.product.name, self.order.customer)
+    def __str__(self):
+        try:
+            return f'{self.product.name}-{self.order.customer.full_name}'
+        except Exception as err:
+            print(err)
+            return self.id
 
 
 class Wishlist(models.Model):

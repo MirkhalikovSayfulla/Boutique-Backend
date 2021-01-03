@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.utils import timezone
 
-from django.views.generic import TemplateView, ListView, DetailView
+from django.views.generic import TemplateView, ListView
 from products.models import (
     Subscribe,
     Product,
@@ -18,6 +19,9 @@ from products.models import (
 
 
 class GetItemsProduct:
+    def __init__(self):
+        self.request = None
+
     def get_order(self):
         customer = self.request.user.customer
         order, created = Order.objects.get_or_create(
@@ -197,8 +201,11 @@ def add_subscribe(request):
 
 
 def add_coupon(request):
+    customer = request.user.customer
+    order, created = Order.objects.get_or_create(
+        customer=customer, complete=False
+    )
     new_coupon_code = request.POST.get('coupon')
-    order = Order.objects.get(customer=request.user.customer)
     try:
         coupon = Coupon.objects.get(code=new_coupon_code)
     except Exception as err:
@@ -210,12 +217,12 @@ def add_coupon(request):
     return redirect('products:cart')
 
 
-def add_wishlist(request, productid):
+def add_wishlist(request, product_id):
     customer = request.user.customer
     order, created = Order.objects.get_or_create(
         customer=customer, complete=False
     )
-    product = Product.objects.get(id=productid)
+    product = Product.objects.get(id=product_id)
     try:
         Wishlist.objects.get(product=product, order=order)
     except:
@@ -231,4 +238,34 @@ def delete_item(request, action, pk):
         OrderItem.objects.get(id=pk).delete()
         return redirect('products:cart')
     return redirect('products:home')
-    
+
+
+def add_product(request, product_id):
+    customer = request.user.customer
+    order, created = Order.objects.get_or_create(
+        customer=customer, complete=False
+    )
+    quantity = request.POST.get('quantity', 1)
+    product = Product.objects.get(id=product_id)
+    try:
+        orderitem = OrderItem.objects.get(product=product, order=order)
+        orderitem.quantity = int(orderitem.quantity) + int(quantity)
+        orderitem.save()
+        return redirect('products:cart')
+    except Exception as err:
+        OrderItem.objects.create(product=product, order=order, quantity=quantity, date_added=timezone.now())
+        print(err)
+        print('work except')
+    return redirect('products:cart')
+
+
+def update_cart(request, action, item_id):
+    orderitem = OrderItem.objects.get(id=item_id)
+    if action == 'add':
+        orderitem.quantity = orderitem.quantity + 1
+    else:
+        orderitem.quantity = orderitem.quantity - 1
+    orderitem.save()
+    if orderitem.quantity <= 0:
+        orderitem.delete()
+    return redirect('products:cart')
