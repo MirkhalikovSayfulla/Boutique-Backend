@@ -27,126 +27,46 @@
                 <h2 class="h5 text-uppercase mb-4">Billing details</h2>
                 <div class="row">
                     <div class="col-lg-8">
-                        <form action="" method="post">
+                        <form action="{% url 'products:send-mail-checkout' %}" method="post">
+                            {% csrf_token %}
                             <div class="row">
                                 <div class="col-lg-6 form-group">
                                     <label class="text-small text-uppercase" for="firstName">First name</label>
                                     <input class="form-control form-control-lg" id="firstName" type="text"
-                                           placeholder="Enter your first name">
+                                           placeholder="Enter your first name" name="firstname" required>
                                 </div>
                                 <div class="col-lg-6 form-group">
                                     <label class="text-small text-uppercase" for="lastName">Last name</label>
                                     <input class="form-control form-control-lg" id="lastName" type="text"
-                                           placeholder="Enter your last name">
+                                           placeholder="Enter your last name" name="lastname" required>
                                 </div>
                                 <div class="col-lg-6 form-group">
                                     <label class="text-small text-uppercase" for="email">Email address</label>
                                     <input class="form-control form-control-lg" id="email" type="email"
-                                           placeholder="e.g. Jason@example.com">
+                                           placeholder="e.g. Jason@example.com" name="email" required>
                                 </div>
                                 <div class="col-lg-6 form-group">
                                     <label class="text-small text-uppercase" for="phone">Phone number</label>
                                     <input class="form-control form-control-lg" id="phone" type="tel"
-                                           placeholder="e.g. +02 245354745">
-                                </div>
-                                <div class="col-lg-6 form-group">
-                                    <label class="text-small text-uppercase" for="company">Company name
-                                        (optional)</label>
-                                    <input class="form-control form-control-lg" id="company" type="text"
-                                           placeholder="Your company name">
-                                </div>
-                                <div class="col-lg-6 form-group">
-                                    <label class="text-small text-uppercase" for="country">Country</label>
-                                    <select class="selectpicker country" id="country" data-width="fit"
-                                            data-style="form-control form-control-lg"
-                                            data-title="Select your country"></select>
+                                           placeholder="e.g. +02 245354745" name="phone" required>
                                 </div>
                                 <div class="col-lg-12 form-group">
                                     <label class="text-small text-uppercase" for="address">Address line 1</label>
                                     <input class="form-control form-control-lg" id="address" type="text"
-                                           placeholder="House number and street name">
+                                           placeholder="House number and street name" name="add1" required>
                                 </div>
                                 <div class="col-lg-12 form-group">
                                     <label class="text-small text-uppercase" for="address">Address line 2</label>
                                     <input class="form-control form-control-lg" id="addressalt" type="text"
-                                           placeholder="Apartment, Suite, Unit, etc (optional)">
+                                           placeholder="Apartment, Suite, Unit, etc (optional)" name="add2" required>
                                 </div>
                                 <div class="col-lg-6 form-group">
                                     <label class="text-small text-uppercase" for="city">Town/City</label>
-                                    <input class="form-control form-control-lg" id="city" type="text">
+                                    <input class="form-control form-control-lg" id="city" type="text" name="city" required>
                                 </div>
                                 <div class="col-lg-6 form-group">
-                                    <label class="text-small text-uppercase" for="state">State/County</label>
-                                    <input class="form-control form-control-lg" id="state" type="text">
-                                </div>
-                                <div class="col-lg-6 form-group">
-                                    <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" id="alternateAddressCheckbox"
-                                               type="checkbox">
-                                        <label class="custom-control-label text-small"
-                                               for="alternateAddressCheckbox">Alternate
-                                            billing
-                                            address</label>
-                                    </div>
-                                </div>
-                                <div class="col-lg-12">
-                                    <div class="row d-none" id="alternateAddress">
-                                        <div class="col-12 mt-4">
-                                            <h2 class="h4 text-uppercase mb-4">Alternative billing details</h2>
-                                        </div>
-                                        <div class="col-lg-6 form-group">
-                                            <label class="text-small text-uppercase" for="firstName2">First name</label>
-                                            <input class="form-control form-control-lg" id="firstName2" type="text"
-                                                   placeholder="Enter your first name">
-                                        </div>
-                                        <div class="col-lg-6 form-group">
-                                            <label class="text-small text-uppercase" for="lastName2">Last name</label>
-                                            <input class="form-control form-control-lg" id="lastName2" type="text"
-                                                   placeholder="Enter your last name">
-                                        </div>
-                                        <div class="col-lg-6 form-group">
-                                            <label class="text-small text-uppercase" for="email2">Email address</label>
-                                            <input class="form-control form-control-lg" id="email2" type="email"
-                                                   placeholder="e.g. Jason@example.com">
-                                        </div>
-                                        <div class="col-lg-6 form-group">
-                                            <label class="text-small text-uppercase" for="phone2">Phone number</label>
-                                            <input class="form-control form-control-lg" id="phone2" type="tel"
-                                                   placeholder="e.g. +02 245354745">
-                                        </div>
-                                        <div class="col-lg-6 form-group">
-                                            <label class="text-small text-uppercase" for="company2">Company name
-                                                (optional)</label>
-                                            <input class="form-control form-control-lg" id="company2" type="text"
-                                                   placeholder="Your company name">
-                                        </div>
-                                        <div class="col-lg-6 form-group">
-                                            <label class="text-small text-uppercase" for="country2">Country</label>
-                                            <select class="selectpicker country" id="country2" data-width="fit"
-                                                    data-style="form-control form-control-lg"
-                                                    data-title="Select your country"></select>
-                                        </div>
-                                        <div class="col-lg-12 form-group">
-                                            <label class="text-small text-uppercase" for="address2">Address line
-                                                1</label>
-                                            <input class="form-control form-control-lg" id="address2" type="text"
-                                                   placeholder="House number and street name">
-                                        </div>
-                                        <div class="col-lg-12 form-group">
-                                            <label class="text-small text-uppercase" for="address2">Address line
-                                                2</label>
-                                            <input class="form-control form-control-lg" id="addressalt2" type="text"
-                                                   placeholder="Apartment, Suite, Unit, etc (optional)">
-                                        </div>
-                                        <div class="col-lg-6 form-group">
-                                            <label class="text-small text-uppercase" for="city3">Town/City</label>
-                                            <input class="form-control form-control-lg" id="city3" type="text">
-                                        </div>
-                                        <div class="col-lg-6 form-group">
-                                            <label class="text-small text-uppercase" for="state4">State/County</label>
-                                            <input class="form-control form-control-lg" id="state4" type="text">
-                                        </div>
-                                    </div>
+                                    <label class="text-small text-uppercase" for="state">State/Country</label>
+                                    <input class="form-control form-control-lg" id="state" type="text" name="country" required>
                                 </div>
                                 <div class="col-lg-12 form-group">
                                     <button class="btn btn-dark" type="submit">Place order</button>

@@ -1,10 +1,12 @@
+from django.core.mail import send_mail
 from django.shortcuts import redirect
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.utils import timezone
-
 from django.views.generic import TemplateView, ListView
+from django.conf import settings
+
 from products.models import (
     Subscribe,
     Product,
@@ -189,6 +191,35 @@ class CheckoutView(TemplateView, GetItemsProduct):
         return super().dispatch(*args, **kwargs)
 
 
+def send_mail_checkout(request):
+    customer = request.user.customer
+    order, created = Order.objects.get_or_create(
+        customer=customer, complete=False)
+    items = order.orderitem_set.all()
+    my_product_list = []
+    for item in items:
+        my_product_list.append(
+            f"Product Name: {item.product.name}\nProduct Price: ${item.product.price}\nProduct Quantity: x{item.quantity}\nProduct Total Price: ${item.get_total}\n-----------------\n"
+        )
+    customer_products = "".join(my_product_list)
+    first_name = request.POST['firstname']
+    last_name = request.POST['lastname']
+    email = request.POST['email']
+    number = request.POST['phone']
+    country = request.POST['country']
+    city = request.POST['city']
+    add1 = request.POST['add1']
+    add2 = request.POST['add2']
+
+    send_mail(f'Customer: {first_name} {last_name}',
+              f"Request Customer:\nUser Name: {request.user.username}\nFull Name: {request.user.first_name} {request.user.last_name}\nEmail: {request.user.email}\n\nForm Customer:\nFirst Name: {first_name}\nLast Name: {last_name}\nPhone Number: {number}\nEmail: {email}\nCountry: {country}\nCity: {city}\nAddress One: {add1}\nAddress Two: {add2}\n\nProducts: \n-----------------\n{customer_products}\nItems: {order.get_cart_items}\nTotal: ${round(order.get_cart_total, 2)}",
+              settings.EMAIL_HOST_USER,
+              ['mirxoliqov.sayfulla@gmail.com'],
+              fail_silently=False
+              )
+    return redirect('products:checkout')
+
+
 def add_subscribe(request):
     try:
         Subscribe.objects.create(
@@ -225,7 +256,8 @@ def add_wishlist(request, product_id):
     product = Product.objects.get(id=product_id)
     try:
         Wishlist.objects.get(product=product, order=order)
-    except:
+    except Exception as err:
+        print(err)
         Wishlist.objects.create(product=product, order=order)
     return redirect('products:wishlist')
 
