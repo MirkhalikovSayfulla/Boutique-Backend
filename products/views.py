@@ -225,8 +225,7 @@ def add_subscribe(request):
         Subscribe.objects.create(
             name=request.POST.get('email')
         )
-    except Exception as err:
-        print(err)
+    except:
         return redirect('products:home')
     return redirect("products:home")
 
@@ -256,8 +255,7 @@ def add_wishlist(request, product_id):
     product = Product.objects.get(id=product_id)
     try:
         Wishlist.objects.get(product=product, order=order)
-    except Exception as err:
-        print(err)
+    except:
         Wishlist.objects.create(product=product, order=order)
     return redirect('products:wishlist')
 
@@ -284,10 +282,8 @@ def add_product(request, product_id):
         orderitem.quantity = int(orderitem.quantity) + int(quantity)
         orderitem.save()
         return redirect('products:cart')
-    except Exception as err:
+    except:
         OrderItem.objects.create(product=product, order=order, quantity=quantity, date_added=timezone.now())
-        print(err)
-        print('work except')
     return redirect('products:cart')
 
 

@@ -134,8 +134,8 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 # Gmail
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = "Gmail Name"
-EMAIL_HOST_PASSWORD = "Gmail Password"
+EMAIL_HOST_USER = "mirxoliqov.sayfulla@gmail.com"
+EMAIL_HOST_PASSWORD = "pythonru"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
