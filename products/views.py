@@ -247,6 +247,7 @@ def add_coupon(request):
     return redirect('products:cart')
 
 
+@login_required(login_url='/users/login/')
 def add_wishlist(request, product_id):
     customer = request.user.customer
     order, created = Order.objects.get_or_create(
@@ -270,6 +271,7 @@ def delete_item(request, action, pk):
     return redirect('products:home')
 
 
+@login_required(login_url='/users/login/')
 def add_product(request, product_id):
     customer = request.user.customer
     order, created = Order.objects.get_or_create(
