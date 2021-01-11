@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from .forms import UserRegisterForm
 
 
-def login_page(request):
+def login_view(request):
     username = request.POST.get('username')
     password = request.POST.get('password')
     user = authenticate(request, username=username, password=password)
@@ -19,7 +19,7 @@ def login_page(request):
     return render(request, "users/login.html", context)
 
 
-def register_page(request):
+def register_view(request):
     forms = UserRegisterForm(request.POST or None)
     if forms.is_valid():
         forms.save()
@@ -32,6 +32,6 @@ def register_page(request):
     return render(request, 'users/register.html', context)
 
 
-def logout_page(request):
+def logout_view(request):
     logout(request)
     return redirect('products:home')
