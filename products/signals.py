@@ -8,7 +8,6 @@ from products.models import Customer
 # Create Customer Profile
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
-    print('Work signals.py file :)')
     if created:
         Customer.objects.create(
             user=instance,
