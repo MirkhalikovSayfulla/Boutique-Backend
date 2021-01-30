@@ -7,7 +7,9 @@ from products.models import (
     Brand,
     Category,
     Type,
-    Subscribe
+    Subscribe,
+    Coupon,
+    Order, Wishlist, OrderItem
 )
 
 
@@ -37,6 +39,10 @@ class TestView(TestCase):
         self.checkout_url = reverse('products:checkout')
         self.subscribe_url = reverse('products:subscribe')
         self.coupon_url = reverse('products:coupon')
+        self.add_wishlist_url = reverse('products:add-wishlist', args=['1'])
+        self.delete_item_url = reverse('products:delitem', args=['wishlist', '1'])
+        self.add_product_url = reverse('products:add-product', args=['1'])
+        self.update_cart_url = reverse('products:update-cart', args=['remove', '1'])
 
         # Models
 
@@ -96,9 +102,45 @@ class TestView(TestCase):
         response = self.client.get(self.checkout_url)
         self.assertEqual(response.status_code, 200)
 
-    def test_subscribe_view_get(self):
+    def test_subscribe_view_post(self):
         self.client.post(self.subscribe_url, data={
             'email': 'test@gmail.com'
         })
         subscribe = Subscribe.objects.get(id=1)
         self.assertEqual(subscribe.name, 'test@gmail.com')
+
+    def test_add_coupon_view_post(self):
+        Coupon.objects.create(
+            code='320282',
+            discount=30
+        )
+        self.client.post(self.coupon_url, data={
+            'coupon': '320282'
+        })
+        order = Order.objects.get(id=1)
+        self.assertTrue(order.coupon)
+
+    def test_add_wishlist_view_post(self):
+        self.client.post(self.add_wishlist_url)
+        wishlist = Wishlist.objects.get(id=1)
+        self.assertTrue(wishlist)
+
+    def test_delete_item_view_post_and_get(self):
+        self.client.post(self.add_wishlist_url)
+        self.assertTrue(Wishlist.objects.all())
+        self.client.get(self.delete_item_url)
+        self.assertFalse(Wishlist.objects.all())
+
+    def test_add_product_view_post(self):
+        self.client.post(self.add_product_url, data={
+            'quantity': 2
+        })
+        self.assertTrue(OrderItem.objects.all())
+
+    def test_update_cart_view_post_and_remove(self):
+        self.client.post(self.add_product_url, data={
+            'quantity': 2
+        })
+        self.assertEqual(OrderItem.objects.get(id=1).quantity, 2)
+        self.client.get(self.update_cart_url)
+        self.assertEqual(OrderItem.objects.get(id=1).quantity, 1)
