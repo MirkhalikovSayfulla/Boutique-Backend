@@ -9,7 +9,9 @@ from products.models import (
     Type,
     Subscribe,
     Coupon,
-    Order, Wishlist, OrderItem
+    Order,
+    Wishlist,
+    OrderItem
 )
 
 
