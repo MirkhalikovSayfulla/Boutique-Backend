@@ -1,5 +1,15 @@
 from django.urls import path
+
+from rest_framework import routers
+
 from . import views
+from .api import (
+    CustomerViewSet,
+    SubscribeViewSet,
+    CategoryViewSet,
+    TypeViewSet,
+    BrandViewSet, ProductViewSet
+)
 
 app_name = 'products'
 
@@ -22,3 +32,14 @@ urlpatterns = [
     path('update-cart/<str:action>/<str:item_id>/', views.update_cart, name="update-cart"),
     path('send-mail/', views.send_mail_checkout, name='send-mail-checkout'),
 ]
+
+# API
+router = routers.DefaultRouter()
+router.register('api/customer', CustomerViewSet, 'customer')
+router.register('api/subscribe', SubscribeViewSet, 'subscribe')
+router.register('api/category', CategoryViewSet, 'category')
+router.register('api/type', TypeViewSet, 'type')
+router.register('api/brand', BrandViewSet, 'brand')
+router.register('api/product', ProductViewSet, 'product')
+
+urlpatterns += router.urls
