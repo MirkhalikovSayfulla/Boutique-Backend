@@ -7,7 +7,12 @@ from .models import (
     Category,
     Type,
     Brand,
-    Product
+    Product,
+    ProductView,
+    Coupon,
+    Order,
+    OrderItem,
+    Wishlist
 )
 
 
@@ -23,9 +28,11 @@ class CustomerSerializers(serializers.ModelSerializer):
 
 
 class SubscribeSerializers(serializers.ModelSerializer):
+    name = serializers.EmailField()
+
     class Meta:
         model = Subscribe
-        fields = '__all__'
+        fields = ['name']
 
 
 class CategorySerializers(serializers.ModelSerializer):
@@ -63,6 +70,11 @@ class ProductSerializers(serializers.ModelSerializer):
         slug_field='name'
     )
 
+    productview_set = serializers.SlugRelatedField(
+        queryset=ProductView.objects.all(),
+        slug_field='name'
+    )
+
     class Meta:
         model = Product
         fields = [
@@ -78,5 +90,62 @@ class ProductSerializers(serializers.ModelSerializer):
             'description',
             'status',
             'get_stars',
-            'completed'
+            'completed',
+            'productview_set'
         ]
+
+
+class ProductViewSerializers(serializers.ModelSerializer):
+    product = serializers.SlugRelatedField(
+        queryset=Product.objects.all(),
+        slug_field='name'
+    )
+
+    class Meta:
+        model = ProductView
+        fields = '__all__'
+
+
+class CouponSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Coupon
+        fields = '__all__'
+
+
+class OrderItemSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItem
+        fields = '__all__'
+
+
+class OrderSerializers(serializers.ModelSerializer):
+    customer = serializers.SlugRelatedField(
+        queryset=Customer.objects.all(),
+        slug_field='full_name'
+    )
+
+    coupon = serializers.SlugRelatedField(
+        queryset=Coupon.objects.all(),
+        slug_field='code'
+    )
+
+    orderitem_set = OrderItemSerializers(many=True, read_only=True)
+
+    class Meta:
+        model = Order
+        fields = [
+            'id',
+            'customer',
+            'coupon',
+            'complete',
+            'get_cart_total',
+            'get_cart_items',
+            'get_coupon',
+            'orderitem_set'
+        ]
+
+
+class WishlistSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Wishlist
+        fields = '__all__'

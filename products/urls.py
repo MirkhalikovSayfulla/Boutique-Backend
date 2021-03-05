@@ -8,7 +8,10 @@ from .api import (
     SubscribeViewSet,
     CategoryViewSet,
     TypeViewSet,
-    BrandViewSet, ProductViewSet
+    BrandViewSet,
+    ProductViewSet,
+    ProductViewsViewSet,
+    CouponViewSet, OrderViewSet, WishlistViewSet
 )
 
 app_name = 'products'
@@ -41,5 +44,10 @@ router.register('api/category', CategoryViewSet, 'category')
 router.register('api/type', TypeViewSet, 'type')
 router.register('api/brand', BrandViewSet, 'brand')
 router.register('api/product', ProductViewSet, 'product')
+router.register('api/productview', ProductViewsViewSet, 'productview')
+router.register('api/coupon', CouponViewSet, 'coupon')
+router.register('api/order', OrderViewSet, 'order')
+router.register('api/wishlist', WishlistViewSet, 'wishlist')
+
 
 urlpatterns += router.urls
