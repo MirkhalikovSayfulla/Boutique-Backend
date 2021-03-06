@@ -10,7 +10,7 @@ from .models import (
     ProductView,
     Coupon,
     Order,
-    Wishlist
+    Wishlist, OrderItem
 )
 from .serializers import (
     CustomerSerializers,
@@ -22,6 +22,7 @@ from .serializers import (
     ProductViewSerializers,
     CouponSerializers,
     OrderSerializers,
+    OrderItemSerializers,
     WishlistSerializers
 )
 
@@ -93,6 +94,14 @@ class CouponViewSet(viewsets.ModelViewSet):
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializers
+    permission_classes = [
+        permissions.AllowAny
+    ]
+
+
+class OrderItemViewSet(viewsets.ModelViewSet):
+    queryset = OrderItem.objects.all()
+    serializer_class = OrderItemSerializers
     permission_classes = [
         permissions.AllowAny
     ]

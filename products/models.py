@@ -134,7 +134,7 @@ class Order(models.Model):
     complete = models.BooleanField(default=False)
 
     def __str__(self):
-        return str(self.id)
+        return self.customer.full_name
 
     @property
     def get_cart_total(self):
@@ -181,3 +181,4 @@ class Wishlist(models.Model):
         Product, on_delete=models.CASCADE)
     order = models.ForeignKey(
         Order, on_delete=models.SET_NULL, blank=True, null=True)
+

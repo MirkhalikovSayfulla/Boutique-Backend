@@ -32,7 +32,7 @@ class SubscribeSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Subscribe
-        fields = ['name']
+        fields = '__all__'
 
 
 class CategorySerializers(serializers.ModelSerializer):
@@ -53,6 +53,17 @@ class BrandSerializers(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ProductViewSerializers(serializers.ModelSerializer):
+    product = serializers.SlugRelatedField(
+        queryset=Product.objects.all(),
+        slug_field='name'
+    )
+
+    class Meta:
+        model = ProductView
+        fields = '__all__'
+
+
 class ProductSerializers(serializers.ModelSerializer):
     type = serializers.SlugRelatedField(
         many=True,
@@ -70,10 +81,7 @@ class ProductSerializers(serializers.ModelSerializer):
         slug_field='name'
     )
 
-    productview_set = serializers.SlugRelatedField(
-        queryset=ProductView.objects.all(),
-        slug_field='name'
-    )
+    productview_set = ProductViewSerializers(read_only=True, many=True)
 
     class Meta:
         model = Product
@@ -95,15 +103,7 @@ class ProductSerializers(serializers.ModelSerializer):
         ]
 
 
-class ProductViewSerializers(serializers.ModelSerializer):
-    product = serializers.SlugRelatedField(
-        queryset=Product.objects.all(),
-        slug_field='name'
-    )
 
-    class Meta:
-        model = ProductView
-        fields = '__all__'
 
 
 class CouponSerializers(serializers.ModelSerializer):
@@ -113,16 +113,14 @@ class CouponSerializers(serializers.ModelSerializer):
 
 
 class OrderItemSerializers(serializers.ModelSerializer):
+
     class Meta:
         model = OrderItem
         fields = '__all__'
 
 
 class OrderSerializers(serializers.ModelSerializer):
-    customer = serializers.SlugRelatedField(
-        queryset=Customer.objects.all(),
-        slug_field='full_name'
-    )
+    customer = serializers.SlugRelatedField(queryset=Customer.objects.all(), slug_field='full_name')
 
     coupon = serializers.SlugRelatedField(
         queryset=Coupon.objects.all(),
@@ -146,6 +144,10 @@ class OrderSerializers(serializers.ModelSerializer):
 
 
 class WishlistSerializers(serializers.ModelSerializer):
+
+    product = serializers.StringRelatedField(read_only=True)
+    order = serializers.StringRelatedField(read_only=True)
+
     class Meta:
         model = Wishlist
         fields = '__all__'
