@@ -10,7 +10,7 @@ from .api import (
     TypeViewSet,
     BrandViewSet,
     ProductViewSet,
-    ProductViewsViewSet,
+    ProductImagesViewSet,
     CouponViewSet, OrderViewSet, WishlistViewSet, OrderItemViewSet
 )
 
@@ -44,11 +44,10 @@ router.register('api/category', CategoryViewSet, 'category')
 router.register('api/type', TypeViewSet, 'type')
 router.register('api/brand', BrandViewSet, 'brand')
 router.register('api/product', ProductViewSet, 'product')
-router.register('api/productview', ProductViewsViewSet, 'productview')
+router.register('api/product-images', ProductImagesViewSet, 'product_images')
 router.register('api/coupon', CouponViewSet, 'coupon')
 router.register('api/order', OrderViewSet, 'order')
 router.register('api/wishlist', WishlistViewSet, 'wishlist')
-router.register('api/orderitem', OrderItemViewSet, 'orderitem')
-
+router.register('api/order-item', OrderItemViewSet, 'order_item')
 
 urlpatterns += router.urls

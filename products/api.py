@@ -7,10 +7,11 @@ from .models import (
     Type,
     Brand,
     Product,
-    ProductView,
+    ProductImages,
     Coupon,
     Order,
-    Wishlist, OrderItem
+    Wishlist,
+    OrderItem
 )
 from .serializers import (
     CustomerSerializers,
@@ -19,7 +20,7 @@ from .serializers import (
     TypeSerializers,
     BrandSerializers,
     ProductSerializers,
-    ProductViewSerializers,
+    ProductImagesSerializers,
     CouponSerializers,
     OrderSerializers,
     OrderItemSerializers,
@@ -75,9 +76,9 @@ class ProductViewSet(viewsets.ModelViewSet):
     ]
 
 
-class ProductViewsViewSet(viewsets.ModelViewSet):
-    queryset = ProductView.objects.all()
-    serializer_class = ProductViewSerializers
+class ProductImagesViewSet(viewsets.ModelViewSet):
+    queryset = ProductImages.objects.all()
+    serializer_class = ProductImagesSerializers
     permission_classes = [
         permissions.AllowAny
     ]

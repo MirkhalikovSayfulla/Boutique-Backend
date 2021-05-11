@@ -77,9 +77,8 @@ class Product(models.Model):
     def image_url(self):
         try:
             url = self.image.url
-        except Exception as err:
+        except:
             url = ""
-            print(err)
 
         return url
 
@@ -94,7 +93,7 @@ class Product(models.Model):
         return stars
 
 
-class ProductView(models.Model):
+class ProductImages(models.Model):
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE
     )
@@ -103,16 +102,14 @@ class ProductView(models.Model):
     def __str__(self):
         try:
             return self.product.name
-        except Exception as err:
-            print(err)
+        except:
             return str(self.id)
 
     @property
     def image_url(self):
         try:
             url = self.image.url
-        except Exception as err:
-            print(err)
+        except:
             url = ""
 
         return url
@@ -171,8 +168,7 @@ class OrderItem(models.Model):
     def __str__(self):
         try:
             return f'{self.product.name}-{self.order.customer.full_name}'
-        except Exception as err:
-            print(err)
+        except:
             return self.id
 
 

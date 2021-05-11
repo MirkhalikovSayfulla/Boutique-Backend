@@ -9,7 +9,7 @@ from products.models import (
     Customer,
     Order,
     Product,
-    ProductView,
+    ProductImages,
     Subscribe,
     Type,
     OrderItem,
@@ -81,12 +81,12 @@ class TestModel(TestCase):
         self.assertTrue(self.product1)
 
     def test_product_view_model(self):
-        self.assertFalse(ProductView.objects.all())
-        ProductView.objects.create(
+        self.assertFalse(ProductImages.objects.all())
+        ProductImages.objects.create(
             product=self.product1,
             image='/media/products/product-1.jpg'
         )
-        self.assertTrue(ProductView.objects.all())
+        self.assertTrue(ProductImages.objects.all())
 
     def test_coupon_model(self):
         self.assertTrue(Coupon.objects.all())

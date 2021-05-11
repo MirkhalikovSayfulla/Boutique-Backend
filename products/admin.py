@@ -4,7 +4,7 @@ from products.models import (
     Category,
     Customer,
     Product,
-    ProductView,
+    ProductImages,
     Order,
     OrderItem,
     Brand,
@@ -59,8 +59,8 @@ class CustomerAdmin(admin.ModelAdmin):
     search_fields = ['user', 'full_name', 'email']
 
 
-@admin.register(ProductView)
-class ProductViewAdmin(admin.ModelAdmin):
+@admin.register(ProductImages)
+class ProductImagesAdmin(admin.ModelAdmin):
     list_display = ['product', 'get_image']
     search_fields = ['product']
 

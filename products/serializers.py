@@ -8,7 +8,7 @@ from .models import (
     Type,
     Brand,
     Product,
-    ProductView,
+    ProductImages,
     Coupon,
     Order,
     OrderItem,
@@ -53,14 +53,14 @@ class BrandSerializers(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ProductViewSerializers(serializers.ModelSerializer):
+class ProductImagesSerializers(serializers.ModelSerializer):
     product = serializers.SlugRelatedField(
         queryset=Product.objects.all(),
         slug_field='name'
     )
 
     class Meta:
-        model = ProductView
+        model = ProductImages
         fields = '__all__'
 
 
@@ -81,7 +81,7 @@ class ProductSerializers(serializers.ModelSerializer):
         slug_field='name'
     )
 
-    productview_set = ProductViewSerializers(read_only=True, many=True)
+    productview_set = ProductImagesSerializers(read_only=True, many=True)
 
     class Meta:
         model = Product
